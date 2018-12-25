@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 import { getMovies } from "../services/fakeMovieService";
-import Pagination from "./common/pagination"; 
+import Pagination from "./common/pagination";
+import {paginate} from "../utils/paginate";
 
 class Movies extends Component {
   state = {
     movies: getMovies(),
-    pageSize:4 ,
-    displayItems:[],
-    currentPage:1
-
+    pageSize: 4,
+    displayItems: [],
+    currentPage: 1
   };
 
   deleteMovie(id) {
@@ -19,17 +19,20 @@ class Movies extends Component {
     this.setState({ movies });
   }
 
-  handlePageChange = (page) => {
+  handlePageChange = page => {
     console.log(page);
     //const item = movies.slice(((page-1) *pageSize ) ,(page+1) *pageSize);
-    this.setState({currentPage:page});
-    console.log(this.state.currentPage);
-  }
+    this.setState({ currentPage: page });
+    
+  };
 
   render() {
     const { length: count } = this.state.movies;
     if (count === 0) return "there are no movies found in the database";
-    const{pageSize, currentPage,movies } = this.state;
+    const { pageSize, currentPage, movies:allMovies } = this.state;
+
+    const movies = paginate(allMovies, currentPage, pageSize);
+    console.log(allMovies);
     return (
       <React.Fragment>
         <table className="table">
@@ -43,7 +46,7 @@ class Movies extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(m => (
+            {movies.map(m => (
               <tr key={m._id}>
                 <td>{m.title}</td>
                 <td>{m.genre.name}</td>
@@ -62,12 +65,12 @@ class Movies extends Component {
             ))}
           </tbody>
         </table>
-        <Pagination 
-        itemCount={count}
-        pageSize={pageSize}
-        currentPage ={currentPage}
-        onPageChange={this.handlePageChange}
-          />
+        <Pagination
+          itemCount={count}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
