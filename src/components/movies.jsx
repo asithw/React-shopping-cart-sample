@@ -10,14 +10,15 @@ class Movies extends Component {
   state = {
     movies: [],
     genres: [],
-    pageSize: 4,
+    pageSize: 2,
     displayItems: [],
     currentPage: 1,
     selectedGenre: null
   };
 
   componentDidMount() {
-    this.setState({ movies: getMovies(), genres: getGenres() });
+    const genres =[{name:"All Genres"}, ...getGenres()];
+    this.setState({ movies: getMovies(), genres});
   }
 
   deleteMovie(id) {
@@ -35,7 +36,7 @@ class Movies extends Component {
 
   handleGenreSelect = genre => {
     console.log(genre);
-     this.setState({selectedGenre:genre});
+     this.setState({selectedGenre:genre, currentPage:1});
   };
   render() {
     //const { length: count } = this.state.movies;
@@ -49,7 +50,7 @@ class Movies extends Component {
     } = this.state;
 
     console.log("selectedGenre  ", selectedGenre);
-    const filteredMovies = selectedGenre
+    const filteredMovies = selectedGenre && selectedGenre._id
       ? allMovies.filter(m => m.genre._id === selectedGenre._id)
       : allMovies;
 
