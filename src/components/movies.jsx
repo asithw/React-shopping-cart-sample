@@ -25,10 +25,8 @@ class Movies extends Component {
     this.setState({ movies: getMovies(), genres });
   }
 
-  deleteMovie = id => {
-    console.log(this.state);
-    console.log(id);
-    const movies = this.state.movies.filter(m => m._id !== id);
+  deleteMovie = movie => {
+    const movies = this.state.movies.filter(m => m._id !== movie._id);
     //this.setState({movies:movies});// if key and value is same.repetition can be removed
     this.setState({ movies });
   };
